@@ -3,7 +3,11 @@
 
 <mapper namespace="com.example.demo.mapper.TUserMapper">
     <select id="selectAllUsers" resultType="com.example.demo.model.TUser">
-        SELECT * FROM "t_user"
+        SELECT * FROM t_user
     </select>
 
+    <insert id="insertUser" parameterType="com.example.demo.model.TUser">
+        INSERT INTO t_user (id, pwd, name, level, description, reg_date)
+        VALUES (#{id}, #{pwd}, #{name}, #{level}, #{description}, now())
+    </insert>
 </mapper>
