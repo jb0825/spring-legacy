@@ -4,20 +4,14 @@
 <html>
 <head>
     <title>1차 과제</title>
+
+    <link rel="stylesheet" type="text/css" href="../../resources/css/index.css">
     <style>
         #upload-fail, #upload-success, #upload-success table { display: none; }
-        table {
-            margin: 10px;
-            border-collapse: collapse;
-        }
-        tr, th, td { border: 1px solid black; }
     </style>
 </head>
 <body>
-<h1><%= "1차 과제" %>
-</h1>
-<br/>
-
+<div class="wrap">
 <form id="file-form" method="post" action="/user" enctype="multipart/form-data" accept-charset="UTF-8" >
     <input type="file" name="file" accept=".dbfile"/>
     <button type="submit">submit</button>
@@ -43,6 +37,7 @@
             <th>date</th>
         </tr>
     </table>
+</div>
 </div>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
