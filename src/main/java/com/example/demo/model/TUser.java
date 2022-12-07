@@ -1,15 +1,14 @@
 package com.example.demo.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
 public class TUser {
 
     private String id;
