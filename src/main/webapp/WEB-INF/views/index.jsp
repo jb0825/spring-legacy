@@ -14,40 +14,39 @@
 </head>
 <body>
 <div class="wrap">
-<h3>📋 신입개발자 1차 과제</h3>
-<form id="file-form" method="post" action="/user" enctype="multipart/form-data" accept-charset="UTF-8" >
-    <label for="file" class="btn btn-secondary">파일 선택</label>
-    <span id="file-info" class="btn">파일을 선택하세요</span>
-    <input id="file" type="file" name="file" accept=".dbfile" />
-    <button type="submit" class="btn btn-primary">submit</button>
-</form>
+    <h3>📋 신입개발자 1차 과제</h3>
+    <form id="file-form" method="post" action="/user" enctype="multipart/form-data" accept-charset="UTF-8" >
+        <label for="file" class="btn btn-secondary">파일 선택</label>
+        <span id="file-info" class="btn">파일을 선택하세요</span>
+        <input id="file" type="file" name="file" accept=".dbfile" />
+        <button type="submit" class="btn btn-primary">submit</button>
+    </form>
 
-<div id="upload-fail">
-    <div id="info"></div>
-    <div>실패한 라인번호와 텍스트: </div>
-    <table class="table">
-        <tr>
-            <th scope="col">line</th>
-            <th scope="col">data</th>
-        </tr>
-    </table>
-</div>
+    <div id="upload-fail">
+        <div id="info"></div>
+        <div>실패한 라인번호와 텍스트: </div>
+        <table class="table">
+            <tr>
+                <th scope="col">line</th>
+                <th scope="col">data</th>
+            </tr>
+        </table>
+    </div>
 
-<div id="upload-success">
-    <button class="btn btn-info">🔎 DB 데이터 조회하기</button>
-    <table class="table">
-        <tr>
-            <th scope="col">ID</th>
-            <th scope="col">password</th>
-            <th scope="col">name</th>
-            <th scope="col">level</th>
-            <th scope="col">description</th>
-            <th scope="col">date</th>
-        </tr>
-    </table>
-</div>
-
-<a href="https://github.com/jb0825/spring-legacy" id="footer" target="_blank">https://github.com/jb0825/spring-legacy</a>
+    <div id="upload-success">
+        <button class="btn btn-info">🔎 DB 데이터 조회하기</button>
+        <table class="table">
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">password</th>
+                <th scope="col">name</th>
+                <th scope="col">level</th>
+                <th scope="col">description</th>
+                <th scope="col">date</th>
+            </tr>
+        </table>
+    </div>
+    <a href="https://github.com/jb0825/spring-legacy" id="footer" target="_blank">https://github.com/jb0825/spring-legacy</a>
 </div>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
@@ -112,7 +111,6 @@
         failInfo.innerText = "✔ 성공: " + successCnt + "건  ❗ " + "실패: " + failCnt + "건";
         failArea.style.display = "block";
     }
-
     if (uploadData !== null && uploadData.length > 0) uploadResult();
 
     /* FILE UPLOAD SUCCESS */
@@ -134,10 +132,6 @@
             }
             successTable.style.display = "block";
             successBtn.setAttribute("disabled", true);
-        })
-        .fail(err => {
-            alert("조회에 실패했습니다.");
-            console.log(err);
         });
     }
     successBtn.addEventListener("click", handleBtnClick);
