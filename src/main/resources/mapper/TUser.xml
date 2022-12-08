@@ -2,12 +2,12 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.example.demo.mapper.TUserMapper">
-    <select id="selectAllUsers" resultType="com.example.demo.model.TUser">
+    <select id="selectAllUsers" resultType="com.example.demo.vo.TUser">
         SELECT * FROM t_user
     </select>
 
-    <insert id="insertUser" parameterType="com.example.demo.model.TUser">
+    <insert id="insertUser" parameterType="com.example.demo.vo.TUser">
         INSERT INTO t_user (id, pwd, name, level, description, reg_date)
-        VALUES (#{id}, #{pwd}, #{name}, #{level}, #{description}, now())
+        VALUES (#{id}, #{pwd}, #{name}, #{level}, #{description}, #{regDate})
     </insert>
 </mapper>

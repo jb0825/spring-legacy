@@ -1,18 +1,13 @@
 package com.example.demo.service;
 
 import com.example.demo.mapper.TUserMapper;
-import com.example.demo.model.TUser;
+import com.example.demo.vo.TUser;
 import lombok.Data;
-import lombok.Getter;
-import org.postgresql.util.PSQLException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.ServletOutputStream;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.sql.Date;
-import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,24 +35,26 @@ public class TUserService {
             throw new Exception();
 
         Map<Integer, String> failMap = new HashMap<>();
-        AtomicInteger count = new AtomicInteger();
+        AtomicInteger count = new AtomicInteger(1);
         InputStream inputStream = file.getInputStream();
+
         this.success = 0; this.fail = 0;
 
-        System.out.println("----------");
+        System.out.println("[" + fileName + "]");
         new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8)).lines().forEach(line -> {
             TUser user = new TUser(line.split("/"));
 
             try {
                 userMapper.insertUser(user);
-                System.out.println("success: " + user);
+                System.out.println("[SUCCESS] " + user);
                 success++;
             }
             catch(Exception e) {
-                failMap.put(count.getAndIncrement(), line);
-                System.out.println("fail: " + user);
+                failMap.put(count.get(), line);
+                System.out.println("[FAIL] " + user);
                 fail++;
             }
+            finally { count.incrementAndGet(); }
         });
 
         return success == count.intValue() ? null : failMap;

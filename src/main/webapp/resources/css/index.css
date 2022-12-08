@@ -1,36 +1,52 @@
-@import url('//spoqa.github.io/spoqa-han-sans/css/SpoqaHanSans-kr.css');
-
+@font-face {
+    font-family: 'ChosunGu';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-04@1.0/ChosunGu.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
 * {
-    font-family: 'Spoqa Han Sans', 'Spoqa Han Sans JP', 'Sans-serif';
+    font-family: 'ChosunGu', sans-serif !important;
+    letter-spacing: 0.5px;
+    font-weight: bold !important;
 }
-table {
-    margin: 10px;
-    border-collapse: collapse;
-}
-tr, th, td { border: 1px solid black; }
 
+input[type=file] { display: none !important; }
 body {
-    width: 100%;
-    height: 100vh;
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+    padding: 20px;
     display: flex;
     align-items: center;
+    height: 100vh;
 }
-
 .wrap {
-    width: 600px;
-    border: 1px solid black;
     margin: 0 auto;
-    height: 400px;
-    text-align: center;
-    padding: 40px;
+    min-width: 550px;
+    min-height: 200px;
+    padding: 30px;
+    border: 1px solid #e2e2e2;
+    border-radius: 10px;
+    position: relative;
 }
-
-#upload-fail {
-    padding: 20px;
+h3 {
+    border-bottom: 1px solid lightgray;
+    padding-bottom: 25px;
 }
-#upload-fail table {
-    margin: 0 auto;
+form { position: relative; }
+form button { position: absolute; right: 0; }
+.btn-secondary { background-color: lightgray; }
+#file-info {
+    width: 329px;
+    text-align: left;
+    background-color: #f2f2f2;
+    cursor: unset !important;
 }
+#info { margin: 10px 0; }
+#upload-fail, #upload-success { margin-top: 30px; }
+#footer {
+    position: absolute;
+    bottom: -30px;
+    right: 5px;
+}
+table { margin: 20px 0; }
+th { background-color: #f3f3f3; }
+tr { border: 1px solid #e6e6e6; }
+td { padding: 10px !important; }
