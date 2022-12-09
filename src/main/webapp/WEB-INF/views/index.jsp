@@ -111,7 +111,7 @@
         failInfo.innerText = "✔ 성공: " + successCnt + "건  ❗ " + "실패: " + failCnt + "건";
         failArea.style.display = "block";
     }
-    if (uploadData !== null && uploadData.length > 0) uploadResult();
+    if (uploadData.length > 0) uploadResult();
 
     /* FILE UPLOAD SUCCESS */
     const handleBtnClick = () => {

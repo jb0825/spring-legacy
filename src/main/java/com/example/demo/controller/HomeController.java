@@ -1,5 +1,7 @@
 package com.example.demo.controller;
 
+import com.example.demo.exception.FileEmptyException;
+import com.example.demo.exception.FileExtException;
 import com.example.demo.vo.TUser;
 import com.example.demo.service.TUserService;
 import org.springframework.stereotype.Controller;
@@ -35,6 +37,8 @@ public class HomeController {
 
     @PostMapping("/user")
     public String postDBFile(MultipartFile file, RedirectAttributes redirect) {
+        String message = null;
+
         try {
             Map<Integer, String> map = userService.insertAllUsers(file);
             if (map != null) redirect.addFlashAttribute("data", map);
@@ -42,9 +46,10 @@ public class HomeController {
             redirect.addFlashAttribute("success", userService.getSuccess());
             redirect.addFlashAttribute("fail", userService.getFail());
         }
-        catch (IOException e) { redirect.addFlashAttribute("message", "파일 업로드에 실패했습니다."); }
-        catch (Exception e)   { redirect.addFlashAttribute("message", "dbfile 만 업로드 할 수 있습니다"); }
+        catch (FileEmptyException | FileExtException e) { message = e.getMessage(); }
+        catch (Exception e) { message = "파일 업로드에 실패했습니다."; }
 
+        redirect.addFlashAttribute("message", message);
         return "redirect:/";
     }
 

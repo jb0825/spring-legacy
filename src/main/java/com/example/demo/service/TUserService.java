@@ -1,5 +1,7 @@
 package com.example.demo.service;
 
+import com.example.demo.exception.FileEmptyException;
+import com.example.demo.exception.FileExtException;
 import com.example.demo.mapper.TUserMapper;
 import com.example.demo.vo.TUser;
 import lombok.Data;
@@ -31,8 +33,8 @@ public class TUserService {
 
     public Map<Integer, String> insertAllUsers(MultipartFile file) throws Exception {
         String fileName = file.getOriginalFilename();
-        if (fileName == null && !fileName.split("\\.")[1].equals("dbfile"))
-            throw new Exception();
+        if (fileName == null || !fileName.split("\\.")[1].equals("dbfile"))
+            throw new FileExtException();
 
         Map<Integer, String> failMap = new HashMap<>();
         AtomicInteger count = new AtomicInteger(1);
@@ -40,23 +42,20 @@ public class TUserService {
 
         this.success = 0; this.fail = 0;
 
-        System.out.println("[" + fileName + "]");
         new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8)).lines().forEach(line -> {
-            TUser user = new TUser(line.split("/"));
-
             try {
+                TUser user = new TUser(line.split("/"));
                 userMapper.insertUser(user);
-                System.out.println("[SUCCESS] " + user);
                 success++;
             }
             catch(Exception e) {
                 failMap.put(count.get(), line);
-                System.out.println("[FAIL] " + user);
                 fail++;
             }
             finally { count.incrementAndGet(); }
         });
 
+        if (success == 0 && fail == 0) throw new FileEmptyException();
         return success == count.intValue() ? null : failMap;
     }
 }
