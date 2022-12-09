@@ -71,22 +71,29 @@
     const handleFormSubmit = (event) => {
         event.preventDefault();
 
-        if (!input.value) {
-            alert("파일을 선택해 주세요.");
-            return;
-        }
+        if (!input.value) { alert("파일을 선택해 주세요."); return; }
         form.submit();
     }
     form.addEventListener("submit", e => handleFormSubmit(e));
 
     /* INPUT FILE */
-    const handleInputChange = () => {
+    const handleInputChange = event => {
+        const target = event.target;
         const fileInfo = document.getElementById("file-info");
         const arr = input.value.split("\\");
 
+        if (target.files[0]) {
+            const max = 5 * 1024 * 1024;
+
+            if (target.files[0].size > max) {
+                input.value = "";
+                alert("5MB 이하의 파일을 선택하세요.");
+            }
+        }
+
         fileInfo.innerText = !input.value ? "파일을 선택하세요" : "파일명: " + arr[arr.length - 1];
     }
-    input.addEventListener("change", handleInputChange);
+    input.addEventListener("change", e => handleInputChange(e));
 
     /* FILE UPLOAD */
     const stringToArr = (data) => data.replace("{", "").replace("}", "").split(", ");
