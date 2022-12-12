@@ -65,7 +65,6 @@
         ],
         headerRowHeight: 40,
         rowHeight: 40,
-        data: null
     });
     const successGrid = new dhx.Grid("success_grid", {
        columns: [
@@ -78,7 +77,6 @@
        ],
         headerRowHeight: 40,
         rowHeight: 40,
-        data: null
     });
 
     /* UTIL */
