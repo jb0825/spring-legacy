@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.dto.FailData;
 import com.example.demo.exception.FileEmptyException;
 import com.example.demo.exception.FileExtException;
 import com.example.demo.mapper.TUserMapper;
@@ -14,6 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Stream;
 
 @Service
 @Data
@@ -31,32 +33,37 @@ public class TUserService {
         return userMapper.selectAllUsers();
     }
 
-    public Map<Integer, String> insertAllUsers(MultipartFile file) throws Exception {
+    public FailData insertAllUsers(MultipartFile file) throws Exception {
         String fileName = file.getOriginalFilename();
         if (fileName == null || !fileName.split("\\.")[1].equals("dbfile"))
             throw new FileExtException();
 
         Map<Integer, String> failMap = new HashMap<>();
-        AtomicInteger count = new AtomicInteger(1);
-        InputStream inputStream = file.getInputStream();
+        int success = 0;
+        int fail = 0;
+        int idx = 0;
 
-        this.success = 0; this.fail = 0;
-
-        new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8)).lines().forEach(line -> {
-            try {
-                TUser user = new TUser(line.split("/"));
-                userMapper.insertUser(user);
-                success++;
+        try (
+            InputStream is = file.getInputStream();
+            BufferedReader br = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
+        ){
+            String line = null;
+            while ((line = br.readLine()) != null) {
+                try {
+                    userMapper.insertUser(new TUser(line.split("/")));
+                    success++;
+                } catch (Exception e) {
+                    failMap.put(idx, line);
+                    fail++;
+                } finally { idx++; }
             }
-            catch(Exception e) {
-                failMap.put(count.get(), line);
-                fail++;
-            }
-            finally { count.incrementAndGet(); }
-        });
+            
+        } catch(IOException e) { throw new Exception(); }
 
         if (success == 0 && fail == 0) throw new FileEmptyException();
-        return success == count.intValue() ? null : failMap;
+        if (success == idx) failMap = null;
+
+        return new FailData(failMap, success, fail);
     }
 }
 

@@ -8,6 +8,10 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <!-- DHTMLX GRID -->
+    <script type="text/javascript" src="../../resources/grid/codebase/grid.js"></script>
+    <link rel="stylesheet" href="../../resources/grid/codebase/grid.css">
     <style>
         #upload-fail, #upload-success, #upload-success table { display: none; }
     </style>
@@ -22,29 +26,16 @@
         <button type="submit" class="btn btn-primary">submit</button>
     </form>
 
+    <div id="info"></div>
+
     <div id="upload-fail">
-        <div id="info"></div>
         <div>실패한 라인번호와 텍스트: </div>
-        <table class="table">
-            <tr>
-                <th scope="col">line</th>
-                <th scope="col">data</th>
-            </tr>
-        </table>
+        <div style="width:500px; height: 200px" id="fail_grid"></div>
     </div>
 
     <div id="upload-success">
         <button class="btn btn-info">🔎 DB 데이터 조회하기</button>
-        <table class="table">
-            <tr>
-                <th scope="col">ID</th>
-                <th scope="col">password</th>
-                <th scope="col">name</th>
-                <th scope="col">level</th>
-                <th scope="col">description</th>
-                <th scope="col">date</th>
-            </tr>
-        </table>
+        <div style="width: 620px; height: 200px" id="success_grid"></div>
     </div>
     <a href="https://github.com/jb0825/spring-legacy" id="footer" target="_blank">https://github.com/jb0825/spring-legacy</a>
 </div>
@@ -56,16 +47,54 @@
 
     const form = document.getElementById("file-form");
     const input = form.querySelector("input");
-    const label = form.querySelector("label");
+    const info = document.querySelector("#info");
 
     const failArea = document.getElementById("upload-fail");
-    const failInfo = failArea.querySelector("#info");
     const failTable = failArea.querySelector("table");
-    const uploadData = '${data}';
+    const uploadData = '${data.map}';
+    const success = '${data.success}';
 
     const successArea = document.getElementById("upload-success");
-    const successTable = successArea.querySelector("table");
     const successBtn = successArea.querySelector("button");
+
+    /* GRID */
+    const failGrid = new dhx.Grid("fail_grid", {
+        columns: [
+            { width: 100, id: "line", header: [{ text: "line" }] },
+            { width: 400, id: "data", header: [{ text: "fail data" }] },
+        ],
+        headerRowHeight: 40,
+        rowHeight: 40,
+        data: null
+    });
+    const successGrid = new dhx.Grid("success_grid", {
+       columns: [
+           { width: 50, id: "id", header: [{ text: "ID" }] },
+           { width: 100, id: "pwd", header: [{ text: "password" }] },
+           { width: 70, id: "name", header: [{ text: "name" }] },
+           { width: 50, id: "level", header: [{ text: "level" }] },
+           { width: 150, id: "description", header: [{ text: "description" }] },
+           { width: 200, id: "regDate", header: [{ text: "date" }] },
+       ],
+        headerRowHeight: 40,
+        rowHeight: 40,
+        data: null
+    });
+
+    /* UTIL */
+    const dateToString = d => {
+        let date = new Date(d);
+        return date.toLocaleDateString() + date.toLocaleTimeString();
+    }
+    const dataToObj = (data) => {
+        let obj = [];
+        const arr = data.replace("{", "").replace("}", "").split(", ");
+        for (let a of arr) {
+            const temp = a.split("=");
+            obj.push({line: temp[0], data: temp[1]});
+        }
+        return obj;
+    }
 
     /* FORM */
     const handleFormSubmit = (event) => {
@@ -96,29 +125,19 @@
     input.addEventListener("change", e => handleInputChange(e));
 
     /* FILE UPLOAD */
-    const stringToArr = (data) => data.replace("{", "").replace("}", "").split(", ");
     const uploadResult = () => {
-        const successCnt = '${success}';
-        const failCnt = '${fail}';
-        const data = stringToArr(uploadData);
+        const success = '${data.success}';
+        const fail = '${data.fail}';
 
-        if (failCnt == 0) {
-            alert(successCnt + " 건 입력에 성공했습니다.");
-            successArea.style.display = "block";
-            return;
-        }
-
-        for (let d of data) {
-            const temp = d.split("=");
-            let tr = document.createElement("tr");
-
-            tr.innerHTML = "<td class='row'>" + temp[0] + "</td><td>" + temp[1] + "</td>";
-            failTable.appendChild(tr);
-        }
-        failInfo.innerText = "✔ 성공: " + successCnt + "건  ❗ " + "실패: " + failCnt + "건";
+        info.innerText = "✔ 성공: " + success + "건  ❗ " + "실패: " + fail + "건";
+        failGrid.data.parse(dataToObj(uploadData));
         failArea.style.display = "block";
     }
-    if (uploadData.length > 0) uploadResult();
+    if (uploadData) uploadResult();
+    else if (success) {
+        info.innerText = "✔ 데이터 입력에 성공했습니다. [" + success + " 건]";
+        successArea.style.display = "block";
+    }
 
     /* FILE UPLOAD SUCCESS */
     const handleBtnClick = () => {
@@ -126,28 +145,14 @@
             url: "/user", method: "GET",
         })
         .done(data => {
-            for(let d of data) {
-                let tr = document.createElement("tr");
-                let str = "";
+            for (let d of data) d.regDate = dateToString(d.regDate);
 
-                for (let i in d) {
-                    let temp = i === "regDate" ? dateToString(d[i]) : d[i];
-                    str += ("<td>" + temp + "</td>");
-                }
-                tr.innerHTML = str;
-                successTable.appendChild(tr);
-            }
-            successTable.style.display = "block";
+            successGrid.data.parse(data);
             successBtn.setAttribute("disabled", true);
+            successArea.querySelector("#success_grid").style.display = "block";
         });
     }
     successBtn.addEventListener("click", handleBtnClick);
-
-    /* UTIL */
-    const dateToString = d => {
-        let date = new Date(d);
-        return date.toLocaleDateString() + date.toLocaleTimeString();
-    }
 </script>
 </body>
 </html>

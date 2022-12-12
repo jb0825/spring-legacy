@@ -10,6 +10,10 @@
     font-weight: bold !important;
 }
 
+#fail_grid, #success_grid {
+    margin-top: 20px;
+}
+#success_grid { display: none; }
 input[type=file] { display: none !important; }
 body {
     padding: 20px;
@@ -34,13 +38,12 @@ form { position: relative; }
 form button { position: absolute; right: 0; }
 .btn-secondary { background-color: lightgray; }
 #file-info {
-    width: 329px;
+    width: calc(100% - 160px);
     text-align: left;
     background-color: #f2f2f2;
     cursor: unset !important;
 }
-#info { margin: 10px 0; }
-#upload-fail, #upload-success { margin-top: 30px; }
+#info { margin: 20px 0 10px 0; }
 #footer {
     position: absolute;
     bottom: -30px;
@@ -50,3 +53,20 @@ table { margin: 20px 0; }
 th { background-color: #f3f3f3; }
 tr { border: 1px solid #e6e6e6; }
 td { padding: 10px !important; }
+
+/* DHTMLX GRID */
+.dhx_grid-body {
+    overflow-y: scroll !important;
+    overflow-x: hidden !important;
+}
+.dhx_grid-body::-webkit-scrollbar {
+    width: 8px;
+}
+.dhx_grid-body::-webkit-scrollbar-track {
+    background-color: #ebebeb;
+    border-radius: 100px;
+}
+.dhx_grid-body::-webkit-scrollbar-thumb {
+    background-color: #bbbbbb;
+    border-radius: 100px;
+}
