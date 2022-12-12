@@ -2,3 +2,5 @@
 /target/
 .idea/
 lib/
+/src/main/webapp/resources/grid/codebase/types/
+/src/main/webapp/resources/grid/codebase/fonts/
