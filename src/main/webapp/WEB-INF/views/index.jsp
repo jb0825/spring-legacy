@@ -148,6 +148,9 @@
             successGrid.data.parse(data);
             successBtn.setAttribute("disabled", true);
             successArea.querySelector("#success_grid").style.display = "block";
+        }).error(err => {
+           console.log(err);
+           alert("데이터 조회에 실패했습니다.");
         });
     }
     successBtn.addEventListener("click", handleBtnClick);
