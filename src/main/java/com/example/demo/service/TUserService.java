@@ -1,6 +1,6 @@
 package com.example.demo.service;
 
-import com.example.demo.dto.FailData;
+import com.example.demo.dto.FailInfo;
 import com.example.demo.exception.FileEmptyException;
 import com.example.demo.exception.FileExtException;
 import com.example.demo.mapper.TUserMapper;
@@ -11,9 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 @Data
@@ -31,37 +29,32 @@ public class TUserService {
         return userMapper.selectAllUsers();
     }
 
-    public FailData insertAllUsers(MultipartFile file) throws Exception {
+    public FailInfo insertAllUsers(MultipartFile file) throws Exception {
         String fileName = file.getOriginalFilename();
         if (fileName == null || !fileName.split("\\.")[1].equals("dbfile"))
             throw new FileExtException();
 
-        Map<Integer, String> failMap = new HashMap<>();
-        int success = 0;
-        int fail = 0;
-        int idx = 0;
-
+        FailInfo result = new FailInfo();
         try (
             InputStream is = file.getInputStream();
             BufferedReader br = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
         ){
             String line = null;
+            int idx = 1;
+
             while ((line = br.readLine()) != null) {
                 try {
                     userMapper.insertUser(new TUser(line.split("/")));
-                    success++;
+                    result.increaseSuccess();
                 } catch (Exception e) {
-                    failMap.put(idx, line);
-                    fail++;
+                    result.addFailLine(idx, line);
+                    result.increaseFail();
                 } finally { idx++; }
             }
-            
         } catch(IOException e) { throw new Exception(); }
 
-        if (success == 0 && fail == 0) throw new FileEmptyException();
-        if (success == idx) failMap = null;
-
-        return new FailData(failMap, success, fail);
+        if (result.getTotalCount() == 0) throw new FileEmptyException();
+        return result;
     }
 }
 

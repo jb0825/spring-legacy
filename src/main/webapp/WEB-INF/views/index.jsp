@@ -51,8 +51,8 @@
 
     const failArea = document.getElementById("upload-fail");
     const failTable = failArea.querySelector("table");
-    const uploadData = '${data.map}';
-    const success = '${data.success}';
+    const failData = '${info.data}';
+    const success = '${info.success}';
 
     const successArea = document.getElementById("upload-success");
     const successBtn = successArea.querySelector("button");
@@ -61,7 +61,7 @@
     const failGrid = new dhx.Grid("fail_grid", {
         columns: [
             { width: 100, id: "line", header: [{ text: "line" }] },
-            { width: 400, id: "data", header: [{ text: "fail data" }] },
+            { width: 400, id: "text", header: [{ text: "fail data" }] },
         ],
         headerRowHeight: 40,
         rowHeight: 40,
@@ -78,21 +78,6 @@
         headerRowHeight: 40,
         rowHeight: 40,
     });
-
-    /* UTIL */
-    const dateToString = d => {
-        let date = new Date(d);
-        return date.toLocaleDateString() + date.toLocaleTimeString();
-    }
-    const dataToObj = (data) => {
-        let obj = [];
-        const arr = data.replace("{", "").replace("}", "").split(", ");
-        for (let a of arr) {
-            const temp = a.split("=");
-            obj.push({line: temp[0], data: temp[1]});
-        }
-        return obj;
-    }
 
     /* FORM */
     const handleFormSubmit = (event) => {
@@ -124,14 +109,13 @@
 
     /* FILE UPLOAD */
     const uploadResult = () => {
-        const success = '${data.success}';
-        const fail = '${data.fail}';
+        const fail = '${info.fail}';
 
         info.innerText = "✔ 성공: " + success + "건  ❗ " + "실패: " + fail + "건";
-        failGrid.data.parse(dataToObj(uploadData));
+        failGrid.data.parse(failData);
         failArea.style.display = "block";
     }
-    if (uploadData) uploadResult();
+    if (failData) uploadResult();
     else if (success) {
         info.innerText = "✔ 데이터 입력에 성공했습니다. [" + success + " 건]";
         successArea.style.display = "block";
@@ -148,12 +132,18 @@
             successGrid.data.parse(data);
             successBtn.setAttribute("disabled", true);
             successArea.querySelector("#success_grid").style.display = "block";
-        }).error(err => {
-           console.log(err);
-           alert("데이터 조회에 실패했습니다.");
-        });
+        }).fail(err => {
+            console.log(err);
+            alert("데이터 조회에 실패했습니다.");
+        })
     }
     successBtn.addEventListener("click", handleBtnClick);
+
+    /* UTIL */
+    const dateToString = d => {
+        let date = new Date(d);
+        return date.toLocaleDateString() + date.toLocaleTimeString();
+    }
 </script>
 </body>
 </html>

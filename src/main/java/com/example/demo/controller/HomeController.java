@@ -1,6 +1,6 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.FailData;
+import com.example.demo.dto.FailInfo;
 import com.example.demo.exception.FileEmptyException;
 import com.example.demo.exception.FileExtException;
 import com.example.demo.vo.TUser;
@@ -39,8 +39,9 @@ public class HomeController {
         String message = null;
 
         try {
-            FailData data = userService.insertAllUsers(file);
-            redirect.addFlashAttribute("data", data);
+            FailInfo data = userService.insertAllUsers(file);
+            if (data.getList().size() > 0) data.listToJSON();
+            redirect.addFlashAttribute("info", data);
         }
         catch (FileEmptyException | FileExtException e) { message = e.getMessage(); }
         catch (Exception e) { message = "파일 업로드에 실패했습니다."; }
