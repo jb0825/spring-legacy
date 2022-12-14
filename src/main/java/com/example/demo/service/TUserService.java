@@ -37,6 +37,11 @@ public class TUserService {
         return userMapper.selectWithPaging(params);
     }
 
+    public Pager setPager(int pageNo) {
+        int dataCount = userMapper.selectUserCount();
+        return new Pager(dataCount, pageNo);
+    }
+
     public FailInfo insertAllUsers(MultipartFile file) throws Exception {
         String fileName = file.getOriginalFilename();
         if (fileName == null || !fileName.split("\\.")[1].equals("dbfile"))

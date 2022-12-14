@@ -2,14 +2,17 @@
 
 Spring Legacy project with maven, mybatis, postgreSQL.
 
-1차 신입 개발자 과제 프로젝트입니다.
+신입 개발자 과제 프로젝트입니다.
 
 #
-
+###1: Flie Upload & DHTMLX Grid
 ![capture.png](./src/main/webapp/resources/img/capture.png)
 
 #
+###2: DHTMLX Suite5 적용
+![capture2.png](./src/main/webapp/resources/img/capture2.png)
 
+#
 SQL:
 ```postgresql
 CREATE TABLE T_USER(

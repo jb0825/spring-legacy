@@ -24,27 +24,15 @@
     <div style="width: 620px; height: 240px" id="grid"></div>
 
     <div id="page-div">
-        <div class="prev-btn">
-            <a>prev</a>
-        </div>
-        <div class="page-btns">
-            <c:forEach var="idx" begin="${pager.startPage}" end="${pager.endPage}">
-                <c:if test="${pager.pageNo == idx}">
-                    <a class="page-btn active" href="/list?pageNo=${idx}">${idx}</a>
-                </c:if>
-                <c:if test="${pager.pageNo != idx}">
-                    <a class="page-btn" href="/list?pageNo=${idx}">${idx}</a>
-                </c:if>
-            </c:forEach>
-        </div>
-        <div class="next-btn">
-            <a>next</a>
-        </div>
+        <div class="first-btn">&lt;&lt;</div>
+        <div class="prev-btn">prev</div>
+        <div class="page-btns"></div>
+        <div class="next-btn">next</div>
+        <div class="last-btn" data-last="">&gt;&gt;</div>
     </div>
     <a href="https://github.com/jb0825/spring-legacy" id="footer" target="_blank">https://github.com/jb0825/spring-legacy</a>
 </div>
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
 <script type="text/javascript">
     /* SERVER ERROR */
     const message = '${message}';
@@ -55,33 +43,82 @@
 
     /* GRID */
     const grid = new dhx.Grid("grid", {
-       columns: [
-           { width: 50, id: "id", header: [{ text: "ID" }] },
-           { width: 100, id: "pwd", header: [{ text: "password" }] },
-           { width: 70, id: "name", header: [{ text: "name" }] },
-           { width: 50, id: "level", header: [{ text: "level" }] },
-           { width: 150, id: "description", header: [{ text: "description" }] },
-           { width: 200, id: "regDate", header: [{ text: "date" }] },
-       ],
+        columns: [
+            { width: 50, id: "id", header: [{ text: "ID" }] },
+            { width: 100, id: "pwd", header: [{ text: "password" }] },
+            { width: 70, id: "name", header: [{ text: "name" }] },
+            { width: 50, id: "level", header: [{ text: "level" }] },
+            { width: 150, id: "description", header: [{ text: "description" }] },
+            { width: 200, id: "regDate", header: [{ text: "date" }] },
+        ],
         headerRowHeight: 40,
         rowHeight: 40,
-        data: ${data}
     });
 
-    const pageDiv = document.getElementById("page-div");
+    /* PAGINATION */
+    const prevBtn  = document.querySelector(".prev-btn");
+    const nextBtn  = document.querySelector(".next-btn");
+    const firstBtn = document.querySelector(".first-btn");
+    const lastBtn  = document.querySelector(".last-btn");
+    const btns     = document.querySelector(".page-btns");
 
-    /* PREV & NEXT BUTTON */
-    const buttonActive = (btn) => {
-        const activeBtn = pageDiv.querySelector(btn);
-        activeBtn.classList.add("active");
-        const uri = btn.includes("prev") ?
-            "/list?pageNo=${pager.pageNo - 1}" :
-            "/list?pageNo=${pager.pageNo + 1}";
-        activeBtn.querySelector("a").setAttribute("href", uri);
+    const getData = (pageNo) => {
+        $.ajax({
+            url: "/user/page/" + pageNo
+        }).done(data => {
+            const jsonData = JSON.parse(data);
+            grid.data.parse(jsonData.users);
+            setPager(jsonData.pager);
+        });
+    }
+    getData(1);
+
+    /* page button click */
+    const handlePageClick = e => { getData(e.target.innerText) }
+
+    /* prev & next button click */
+    const activeCheck = (target) => {
+        if (!target.classList.contains("active")) return false;
+        return document.querySelector(".page-btns .active").innerText;
+    }
+    const handlePrevNextClick = e => {
+        let pageNo = activeCheck(e.target);
+        if (!pageNo) return;
+
+        pageNo *= 1;
+        getData(e.target.innerText === "prev" ? pageNo - 1 : pageNo + 1);
+    }
+    const handleFirstLastClick = e => {
+        const target = e.target;
+        getData(target.className === "first-btn" ? 1 : target.dataset.last);
     }
 
-    if (${pager.prev}) buttonActive(".prev-btn");
-    if (${pager.next}) buttonActive(".next-btn");
+    prevBtn.addEventListener("click", handlePrevNextClick);
+    nextBtn.addEventListener("click", handlePrevNextClick);
+    firstBtn.addEventListener("click", handleFirstLastClick);
+    lastBtn.addEventListener("click", handleFirstLastClick);
+
+    /* set pagination buttons */
+    const active = (condition, elem) => {
+        if (condition) elem.classList.add("active");
+        else elem.classList.remove("active");
+    }
+
+    const setPager = (pager) => {
+        const {prev, next, pageCount, pageNo, startPage, endPage} = pager;
+
+        active(prev, prevBtn);
+        active(next, nextBtn);
+
+        btns.innerHTML = "";
+        for (let i = startPage; i <= endPage; i++)
+            btns.innerHTML += "<div class='"+ (i == pageNo ? 'page-btn active' : 'page-btn') +"'>"+ i +"</div>";
+
+        const pageBtn = document.getElementsByClassName("page-btn");
+        for (let btn of pageBtn) btn.addEventListener("click", e => handlePageClick(e));
+
+        lastBtn.dataset["last"] = pageCount;
+    }
 </script>
 </body>
 </html>

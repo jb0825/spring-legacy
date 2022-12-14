@@ -5,8 +5,8 @@
 <head>
   <title>1차 과제</title>
 
-  <link rel="stylesheet" type="text/css" href="../../resources/css/list-dhtmlx.css">
-  <link rel="stylesheet" type="text/css" href="../../resources/css/common.css">
+  <link rel="stylesheet" type="text/css" href="/resources/css/list-dhtmlx.css">
+  <link rel="stylesheet" type="text/css" href="/resources/css/common.css">
 
   <!-- BOOTSTRAP -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
@@ -27,7 +27,6 @@
   <a href="https://github.com/jb0825/spring-legacy" id="footer" target="_blank">https://github.com/jb0825/spring-legacy</a>
 </div>
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
 <script type="text/javascript">
   /* SERVER ERROR */
   const message = '${message}';

@@ -9,14 +9,13 @@ import com.example.demo.service.TUserService;
 import com.google.gson.Gson;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 public class HomeController {
@@ -55,18 +54,18 @@ public class HomeController {
     }
 
     @GetMapping("/list")
-    public String list(Model model, @RequestParam(defaultValue = "1") int pageNo) {
-        try {
-            Pager pager = new Pager(userService.selectAllUsers().size(), pageNo);
-            List<TUser> users = userService.selectWithPaging(pager);
+    public String test() { return "list"; }
 
-            model.addAttribute("data", new Gson().toJson(users));
-            model.addAttribute("pager", pager);
-        } catch (Exception e) {
-            e.printStackTrace();
-            model.addAttribute("message", "데이터 조회에 실패했습니다.");
-        }
-        return "list";
+    @ResponseBody
+    @GetMapping("/user/page/{pageNo}")
+    public Object getUsersWithPaging(@PathVariable int pageNo) {
+        Pager pager = userService.setPager(pageNo);
+        List<TUser> users = userService.selectWithPaging(pager);
+        Map<String, Object> data = new HashMap<>();
+        data.put("users", users);
+        data.put("pager", pager);
+
+        return new Gson().toJson(data);
     }
 
     @GetMapping("/list/dhtmlx")

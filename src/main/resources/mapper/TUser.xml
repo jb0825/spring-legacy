@@ -6,6 +6,10 @@
         SELECT * FROM t_user
     </select>
 
+    <select id="selectUserCount" resultType="int">
+        SELECT COUNT(id) FROM t_user;
+    </select>
+
     <select id="selectWithPaging" parameterType="hashmap" resultType="com.example.demo.vo.TUser">
         SELECT * FROM t_user
         OFFSET #{offset} LIMIT #{limit}

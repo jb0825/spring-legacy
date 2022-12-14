@@ -10,5 +10,6 @@ import java.util.List;
 public interface TUserMapper {
     List<TUser> selectAllUsers();
     List<TUser> selectWithPaging(HashMap<String, Object> params);
+    int selectUserCount();
     void insertUser(TUser user);
 }

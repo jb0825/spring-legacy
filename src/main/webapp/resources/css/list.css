@@ -1,9 +1,20 @@
 #page-div {
-    width: 100px;
+    width: fit-content;
     height: 33px;
-    margin: 20px auto 0;
+    margin: 50px auto 0;
     position: relative;
 }
+.first-btn, .last-btn {
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    line-height: 30px;
+    position: absolute;
+    top: 1px;
+    cursor: pointer;
+}
+.first-btn { left: -85px; }
+.last-btn { right: -85px; }
 .prev-btn, .next-btn {
     display: inline-block;
     width: 45px;
@@ -14,23 +25,28 @@
     top: -1px;
     border-radius: 5px;
     background-color: lightgray;
+    color: gray;
+    cursor: not-allowed;
 }
+/*
 .prev-btn a, .next-btn a {
     color: gray;
     cursor: not-allowed;
 }
-a:hover {
-    text-decoration: none !important;
-}
+ */
 .prev-btn.active, .next-btn.active {
     background-color: #337ab7;
+    color: #fff;
+    cursor: pointer;
 }
+/*
 .prev-btn.active a, .next-btn.active a {
     color: #fff;
     cursor: pointer;
 }
-.prev-btn { left: -45px; }
-.next-btn { right: -45px; }
+ */
+.prev-btn { left: -50px; }
+.next-btn { right: -50px; }
 .page-btn {
     display: inline-block;
     width: 29px;
