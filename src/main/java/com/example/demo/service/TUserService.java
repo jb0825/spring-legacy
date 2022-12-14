@@ -14,15 +14,12 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 @Data
 public class TUserService {
 
     private final TUserMapper userMapper;
-    public int success;
-    public int fail;
 
     public TUserService(TUserMapper userMapper) {
         this.userMapper = userMapper;

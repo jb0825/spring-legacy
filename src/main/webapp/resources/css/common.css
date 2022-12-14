@@ -31,6 +31,9 @@ h3 { padding-bottom: 40px; }
     padding: 10px;
     border-bottom: 1px solid #e2e2e2;
 }
+#header a:first-child {
+    background-color: #eaf3ff;
+}
 #footer {
     position: absolute;
     bottom: -30px;
