@@ -1,0 +1,21 @@
+h3{
+    padding-bottom: 20px !important;
+}
+.objbox {
+    overflow-x: hidden !important;
+}
+.objbox::-webkit-scrollbar {
+    width: 8px;
+}
+.objbox::-webkit-scrollbar-track {
+    background-color: #ebebeb;
+    border-radius: 100px;
+}
+.objbox::-webkit-scrollbar-thumb {
+    background-color: #bbbbbb;
+    border-radius: 100px;
+}
+#grid {
+    width: 620px !important;
+    height: 240px !important;
+}

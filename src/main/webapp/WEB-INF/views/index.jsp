@@ -5,6 +5,9 @@
     <title>1차 과제</title>
 
     <link rel="stylesheet" type="text/css" href="../../resources/css/index.css">
+    <link rel="stylesheet" type="text/css" href="../../resources/css/common.css">
+
+    <!-- BOOTSTRAP -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
@@ -18,7 +21,8 @@
 </head>
 <body>
 <div class="wrap">
-    <h3>📋 신입개발자 1차 과제</h3>
+    <jsp:include page="modules/header.jsp"></jsp:include>
+
     <form id="file-form" method="post" action="/user" enctype="multipart/form-data" accept-charset="UTF-8" >
         <label for="file" class="btn btn-secondary">파일 선택</label>
         <span id="file-info" class="btn">파일을 선택하세요</span>

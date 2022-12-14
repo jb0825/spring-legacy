@@ -1,42 +1,11 @@
-@font-face {
-    font-family: 'ChosunGu';
-    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-04@1.0/ChosunGu.woff') format('woff');
-    font-weight: normal;
-    font-style: normal;
-}
-* {
-    font-family: 'ChosunGu', sans-serif !important;
-    letter-spacing: 0.5px;
-    font-weight: bold !important;
-}
-
 #fail_grid, #success_grid {
     margin-top: 20px;
 }
 #success_grid { display: none; }
 input[type=file] { display: none !important; }
-body {
-    padding: 20px;
-    display: flex;
-    align-items: center;
-    height: 100vh;
-}
-.wrap {
-    margin: 0 auto;
-    min-width: 550px;
-    min-height: 200px;
-    padding: 30px;
-    border: 1px solid #e2e2e2;
-    border-radius: 10px;
-    position: relative;
-}
-h3 {
-    border-bottom: 1px solid lightgray;
-    padding-bottom: 25px;
-}
+
 form { position: relative; }
 form button { position: absolute; right: 0; }
-.btn-secondary { background-color: lightgray; }
 #file-info {
     width: calc(100% - 160px);
     text-align: left;
@@ -44,29 +13,7 @@ form button { position: absolute; right: 0; }
     cursor: unset !important;
 }
 #info { margin: 20px 0 10px 0; }
-#footer {
-    position: absolute;
-    bottom: -30px;
-    right: 5px;
-}
 table { margin: 20px 0; }
 th { background-color: #f3f3f3; }
 tr { border: 1px solid #e6e6e6; }
 td { padding: 10px !important; }
-
-/* DHTMLX GRID */
-.dhx_grid-body {
-    overflow-y: scroll !important;
-    overflow-x: hidden !important;
-}
-.dhx_grid-body::-webkit-scrollbar {
-    width: 8px;
-}
-.dhx_grid-body::-webkit-scrollbar-track {
-    background-color: #ebebeb;
-    border-radius: 100px;
-}
-.dhx_grid-body::-webkit-scrollbar-thumb {
-    background-color: #bbbbbb;
-    border-radius: 100px;
-}

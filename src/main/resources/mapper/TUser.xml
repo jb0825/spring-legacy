@@ -6,6 +6,11 @@
         SELECT * FROM t_user
     </select>
 
+    <select id="selectWithPaging" parameterType="hashmap" resultType="com.example.demo.vo.TUser">
+        SELECT * FROM t_user
+        OFFSET #{offset} LIMIT #{limit}
+    </select>
+
     <insert id="insertUser" parameterType="com.example.demo.vo.TUser">
         INSERT INTO t_user (id, pwd, name, level, description, reg_date)
         VALUES (#{id}, #{pwd}, #{name}, #{level}, #{description}, #{regDate})
