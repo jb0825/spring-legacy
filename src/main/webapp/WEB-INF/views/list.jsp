@@ -5,8 +5,8 @@
 <head>
     <title>1차 과제</title>
 
-    <link rel="stylesheet" type="text/css" href="../../resources/css/list.css">
-    <link rel="stylesheet" type="text/css" href="../../resources/css/common.css">
+    <link rel="stylesheet" type="text/css" href="/resources/css/list.css">
+    <link rel="stylesheet" type="text/css" href="/resources/css/common.css">
 
     <!-- BOOTSTRAP -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
@@ -34,13 +34,6 @@
 </div>
 
 <script type="text/javascript">
-    /* SERVER ERROR */
-    const message = '${message}';
-    if(message.length > 0) {
-        alert(message);
-        location.href = "/";
-    }
-
     /* GRID */
     const grid = new dhx.Grid("grid", {
         columns: [
@@ -69,14 +62,16 @@
             const jsonData = JSON.parse(data);
             grid.data.parse(jsonData.users);
             setPager(jsonData.pager);
+        }).fail(error => {
+            console.log(error);
+            alert("데이터 조회에 실패했습니다.");
+            location.href = "/";
         });
     }
     getData(1);
 
     /* page button click */
     const handlePageClick = e => { getData(e.target.innerText) }
-
-    /* prev & next button click */
     const activeCheck = (target) => {
         if (!target.classList.contains("active")) return false;
         return document.querySelector(".page-btns .active").innerText;
@@ -106,18 +101,18 @@
 
     const setPager = (pager) => {
         const {prev, next, pageCount, pageNo, startPage, endPage} = pager;
-
-        active(prev, prevBtn);
-        active(next, nextBtn);
+        const pageBtn = document.getElementsByClassName("page-btn");
 
         btns.innerHTML = "";
+
         for (let i = startPage; i <= endPage; i++)
             btns.innerHTML += "<div class='"+ (i == pageNo ? 'page-btn active' : 'page-btn') +"'>"+ i +"</div>";
-
-        const pageBtn = document.getElementsByClassName("page-btn");
         for (let btn of pageBtn) btn.addEventListener("click", e => handlePageClick(e));
 
         lastBtn.dataset["last"] = pageCount;
+
+        active(prev, prevBtn);
+        active(next, nextBtn);
     }
 </script>
 </body>

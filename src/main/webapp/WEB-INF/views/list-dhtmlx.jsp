@@ -28,25 +28,8 @@
 </div>
 
 <script type="text/javascript">
-  /* SERVER ERROR */
-  const message = '${message}';
-  if(message.length > 0) {
-    alert(message);
-    location.href = "/";
-  }
-
   /* GRID */
   const grid = new dhtmlXGridObject('grid');
-  const data = ${data};
-  const jsonData = {rows: []}
-
-  for (let idx in data) {
-    const d = data[idx];
-    jsonData.rows.push({
-        id: idx,
-        data: [d.id, d.pwd, d.name, d.level, d.description, d.regDate]
-      });
-  }
 
   grid.setImagePath("/resources/dhtmlxSuite/codebase/imgs/")
   grid.setHeader("ID,pwd,name,level,description,regDate");
@@ -55,7 +38,32 @@
   grid.enablePaging(true,10,5,"page",true);
   grid.setPagingSkin("toolbar", "dhx_skyblue");
   grid.init();
-  grid.parse(jsonData,"json");
+
+  $.ajax({ url: "/user" })
+   .done(data => { setGridData(data) })
+   .fail(error => {
+      console.log(error);
+      alert("데이터 조회에 실패했습니다.");
+      location.href = "/";
+  });
+
+  const dateToString = d => {
+    let date = new Date(d);
+    return date.toLocaleDateString() + date.toLocaleTimeString();
+  }
+
+  const setGridData = data => {
+    const jsonData = {rows: []};
+
+    for (let idx in data) {
+      const d = data[idx];
+      jsonData.rows.push({
+        id: idx,
+        data: [d.id, d.pwd, d.name, d.level, d.description, dateToString(d.regDate)]
+      });
+    }
+    grid.parse(jsonData, "json");
+  }
 
 </script>
 </body>

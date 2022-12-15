@@ -34,10 +34,6 @@ public class Pager {
 
         if (pageNo > 1) this.prev = true;
         if (pageNo < pageCount) this.next = true;
-
-        System.out.println(pageNo);
-        System.out.println(startPage);
-        System.out.println(endPage);
     }
 
     public int getOffset() { return this.limit * (this.pageNo - 1); }

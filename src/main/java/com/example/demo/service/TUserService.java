@@ -14,6 +14,7 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Data
@@ -25,10 +26,13 @@ public class TUserService {
         this.userMapper = userMapper;
     }
 
-    public List<TUser> selectAllUsers() {
-        return userMapper.selectAllUsers();
-    }
+    public List<TUser> selectAllUsers() { return userMapper.selectAllUsers(); }
 
+    /**
+     * get paged List<T_User> from DB
+     * @param pager (offset, limit)
+     * @return paged user list
+     */
     public List<TUser> selectWithPaging(Pager pager) {
         HashMap<String, Object> params = new HashMap<>();
         params.put("offset", pager.getOffset());
@@ -37,9 +41,22 @@ public class TUserService {
         return userMapper.selectWithPaging(params);
     }
 
-    public Pager setPager(int pageNo) {
+    /**
+     * get pager & paged user list
+     * @param pageNo current page
+     * @return Map { users: List, pager: Pager }
+     * @see Pager
+     * @see TUserService#selectWithPaging(Pager)
+     */
+    public Map<String, Object> getPagedUser(int pageNo) {
         int dataCount = userMapper.selectUserCount();
-        return new Pager(dataCount, pageNo);
+        Pager pager = new Pager(dataCount, pageNo);
+        List<TUser> users = selectWithPaging(pager);
+        Map<String, Object> data = new HashMap<>();
+
+        data.put("users", users);
+        data.put("pager", pager);
+        return data;
     }
 
     public FailInfo insertAllUsers(MultipartFile file) throws Exception {
