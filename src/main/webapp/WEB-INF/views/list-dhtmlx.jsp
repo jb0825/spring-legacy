@@ -40,7 +40,14 @@
   grid.init();
 
   $.ajax({ url: "/user" })
-   .done(data => { setGridData(data) })
+   .done(data => {
+     setGridData(data);
+
+     grid.aToolBar.addButton("excel", 8, "Download", "excel.png");
+     grid.aToolBar.attachEvent("onClick", name => {
+       if (name === 'excel') grid.toExcel("https://dhtmlxgrid.appspot.com/export/excel");
+     });
+   })
    .fail(error => {
       console.log(error);
       alert("데이터 조회에 실패했습니다.");

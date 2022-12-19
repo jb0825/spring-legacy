@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.FailInfo;
+import com.example.demo.dto.UserResponseData;
 import com.example.demo.exception.FileEmptyException;
 import com.example.demo.exception.FileExtException;
 import com.example.demo.mapper.TUserMapper;
@@ -14,7 +15,6 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 @Data
@@ -44,19 +44,25 @@ public class TUserService {
     /**
      * get pager & paged user list
      * @param pageNo current page
-     * @return Map { users: List, pager: Pager }
+     * @param limit rows per page
+     * @return UserResponseData
      * @see Pager
      * @see TUserService#selectWithPaging(Pager)
      */
-    public Map<String, Object> getPagedUser(int pageNo) {
-        int dataCount = userMapper.selectUserCount();
-        Pager pager = new Pager(dataCount, pageNo);
-        List<TUser> users = selectWithPaging(pager);
-        Map<String, Object> data = new HashMap<>();
+    public UserResponseData getPagedUser(int pageNo, Integer limit) {
+        UserResponseData responseData = new UserResponseData();
+        try {
+            int dataCount = userMapper.selectUserCount();
+            Pager pager = limit == null ?
+                    new Pager(dataCount, pageNo) :
+                    new Pager(dataCount, pageNo, limit);
 
-        data.put("users", users);
-        data.put("pager", pager);
-        return data;
+            responseData.setAll(selectWithPaging(pager), pager);
+        } catch (Exception e) {
+            responseData.setSuccess(false);
+            responseData.setMessage(e.getMessage());
+        }
+        return responseData;
     }
 
     public FailInfo insertAllUsers(MultipartFile file) throws Exception {

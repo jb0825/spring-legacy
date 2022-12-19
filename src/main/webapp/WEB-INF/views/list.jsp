@@ -34,6 +34,12 @@
 </div>
 
 <script type="text/javascript">
+    const prevBtn  = document.querySelector(".prev-btn");
+    const nextBtn  = document.querySelector(".next-btn");
+    const firstBtn = document.querySelector(".first-btn");
+    const lastBtn  = document.querySelector(".last-btn");
+    const btns     = document.querySelector(".page-btns");
+
     /* GRID */
     const grid = new dhx.Grid("grid", {
         columns: [
@@ -48,39 +54,34 @@
         rowHeight: 40,
     });
 
-    /* PAGINATION */
-    const prevBtn  = document.querySelector(".prev-btn");
-    const nextBtn  = document.querySelector(".next-btn");
-    const firstBtn = document.querySelector(".first-btn");
-    const lastBtn  = document.querySelector(".last-btn");
-    const btns     = document.querySelector(".page-btns");
-
+    /* AJAX Request */
     const getData = (pageNo) => {
         $.ajax({
             url: "/user/page/" + pageNo
         }).done(data => {
-            const jsonData = JSON.parse(data);
-            grid.data.parse(jsonData.users);
-            setPager(jsonData.pager);
-        }).fail(error => {
-            console.log(error);
-            alert("데이터 조회에 실패했습니다.");
-            location.href = "/";
+            const {success, message, users, pager} = data;
+
+            if (!success) {
+                console.log(message);
+                alert("데이터 조회에 실패했습니다.");
+                location.href = "/";
+            }
+            grid.data.parse(users);
+            setPager(pager);
         });
     }
     getData(1);
 
-    /* page button click */
+    /* page button click event */
     const handlePageClick = e => { getData(e.target.innerText) }
-    const activeCheck = (target) => {
-        if (!target.classList.contains("active")) return false;
-        return document.querySelector(".page-btns .active").innerText;
-    }
     const handlePrevNextClick = e => {
-        let pageNo = activeCheck(e.target);
-        if (!pageNo) return;
-
+        if (!e.target.classList.contains("active")) {
+            e.preventDefault();
+            return;
+        }
+        let pageNo = document.querySelector(".page-btns .active").innerText;
         pageNo *= 1;
+
         getData(e.target.innerText === "prev" ? pageNo - 1 : pageNo + 1);
     }
     const handleFirstLastClick = e => {
@@ -88,17 +89,11 @@
         getData(target.className === "first-btn" ? 1 : target.dataset.last);
     }
 
-    prevBtn.addEventListener("click", handlePrevNextClick);
-    nextBtn.addEventListener("click", handlePrevNextClick);
-    firstBtn.addEventListener("click", handleFirstLastClick);
-    lastBtn.addEventListener("click", handleFirstLastClick);
-
     /* set pagination buttons */
     const active = (condition, elem) => {
         if (condition) elem.classList.add("active");
         else elem.classList.remove("active");
     }
-
     const setPager = (pager) => {
         const {prev, next, pageCount, pageNo, startPage, endPage} = pager;
         const pageBtn = document.getElementsByClassName("page-btn");
@@ -107,13 +102,18 @@
 
         for (let i = startPage; i <= endPage; i++)
             btns.innerHTML += "<div class='"+ (i == pageNo ? 'page-btn active' : 'page-btn') +"'>"+ i +"</div>";
-        for (let btn of pageBtn) btn.addEventListener("click", e => handlePageClick(e));
+        for (let btn of pageBtn) btn.addEventListener("click", handlePageClick);
 
         lastBtn.dataset["last"] = pageCount;
 
         active(prev, prevBtn);
         active(next, nextBtn);
     }
+
+    prevBtn.addEventListener("click", handlePrevNextClick);
+    nextBtn.addEventListener("click", handlePrevNextClick);
+    firstBtn.addEventListener("click", handleFirstLastClick);
+    lastBtn.addEventListener("click", handleFirstLastClick);
 </script>
 </body>
 </html>

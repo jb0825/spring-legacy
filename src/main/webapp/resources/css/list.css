@@ -3,6 +3,7 @@
     height: 33px;
     margin: 50px auto 0;
     position: relative;
+    -webkit-user-select: none;
 }
 .first-btn, .last-btn {
     width: 30px;
@@ -28,23 +29,11 @@
     color: gray;
     cursor: not-allowed;
 }
-/*
-.prev-btn a, .next-btn a {
-    color: gray;
-    cursor: not-allowed;
-}
- */
 .prev-btn.active, .next-btn.active {
     background-color: #337ab7;
     color: #fff;
     cursor: pointer;
 }
-/*
-.prev-btn.active a, .next-btn.active a {
-    color: #fff;
-    cursor: pointer;
-}
- */
 .prev-btn { left: -50px; }
 .next-btn { right: -50px; }
 .page-btn {

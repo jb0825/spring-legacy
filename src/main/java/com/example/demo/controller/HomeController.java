@@ -1,20 +1,17 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.FailInfo;
+import com.example.demo.dto.UserResponseData;
 import com.example.demo.exception.FileEmptyException;
 import com.example.demo.exception.FileExtException;
-import com.example.demo.util.Pager;
 import com.example.demo.vo.TUser;
 import com.example.demo.service.TUserService;
-import com.google.gson.Gson;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
-import java.util.Map;
 
 @Controller
 public class HomeController {
@@ -35,6 +32,9 @@ public class HomeController {
 
     @GetMapping("/list/dhtmlx")
     public String listDhtmlx() { return  "list-dhtmlx"; }
+
+    @GetMapping("/list2")
+    public String test() { return "list2"; }
 
     @PostMapping("/user")
     public String postDBFile(MultipartFile file, RedirectAttributes redirect) {
@@ -60,9 +60,14 @@ public class HomeController {
 
     @ResponseBody
     @GetMapping("/user/page/{pageNo}")
-    public Object getUsersWithPaging(@PathVariable int pageNo) {
-        Map<String, Object> data = userService.getPagedUser(pageNo);
-        return new Gson().toJson(data);
+    public UserResponseData getUsersWithPaging(@PathVariable int pageNo) {
+        return userService.getPagedUser(pageNo, null);
     }
 
+    @ResponseBody
+    @GetMapping("/user/page/{pageNo}/{limit}")
+    public UserResponseData getUsersWithPaging(@PathVariable int pageNo, @PathVariable(required = false) Integer limit) {
+        if (limit == null) limit = 10;
+        return userService.getPagedUser(pageNo, limit);
+    }
 }
